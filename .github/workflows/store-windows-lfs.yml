@@ -1,0 +1,35 @@
+name: Store Windows executables in Git LFS
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/store-windows-lfs.yml]
+permissions:
+  contents: write
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and verify supplied executables
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p SRC/Windows/App SRC/Windows/Installer
+          curl --fail --location --retry 3 -o SRC/Windows/App/HologramAuthenticity.exe https://github.com/ArviZuko/Counterfeit-Hologram-Detector/releases/download/windows-2026-11-09/HologramAuthenticity.exe
+          curl --fail --location --retry 3 -o SRC/Windows/Installer/HologramAuthenticity_Setup.exe https://github.com/ArviZuko/Counterfeit-Hologram-Detector/releases/download/windows-2026-11-09/HologramAuthenticity_Setup.exe
+          echo "ffff997e98ce7a1caed953055613588fc4045b0b7de6051683ee1e874c05b4da  SRC/Windows/App/HologramAuthenticity.exe" | sha256sum --check
+          echo "20bbb8191c1082254ed173a33a861f4a958786c81dd4b389289657d3a3bed9e1  SRC/Windows/Installer/HologramAuthenticity_Setup.exe" | sha256sum --check
+      - name: Store actual executables with Git LFS
+        shell: bash
+        run: |
+          set -euo pipefail
+          git lfs install --local
+          git lfs track 'SRC/Windows/**/*.exe'
+          git rm SRC/Windows/App/DOWNLOAD.md SRC/Windows/Installer/DOWNLOAD.md
+          git rm .github/workflows/store-windows-lfs.yml
+          git add .gitattributes SRC/Windows/App/HologramAuthenticity.exe SRC/Windows/Installer/HologramAuthenticity_Setup.exe
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Store Windows executables in their folders using Git LFS"
+          git push origin HEAD:main
