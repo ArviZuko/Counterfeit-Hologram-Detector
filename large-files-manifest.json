@@ -1,0 +1,30 @@
+{
+  "files": [
+    {
+      "path": "SRC/Windows/App/HologramAuthenticity.exe",
+      "size": 140328438,
+      "sha256": "ffff997e98ce7a1caed953055613588fc4045b0b7de6051683ee1e874c05b4da",
+      "parts": [
+        {
+          "url": "https://github.com/ArviZuko/Counterfeit-Hologram-Detector/releases/download/windows-2026-11-09/HologramAuthenticity.exe",
+          "size": 140328438,
+          "sha256": "ffff997e98ce7a1caed953055613588fc4045b0b7de6051683ee1e874c05b4da",
+          "name": "HologramAuthenticity.exe"
+        }
+      ]
+    },
+    {
+      "path": "SRC/Windows/Installer/HologramAuthenticity_Setup.exe",
+      "size": 141719810,
+      "sha256": "20bbb8191c1082254ed173a33a861f4a958786c81dd4b389289657d3a3bed9e1",
+      "parts": [
+        {
+          "url": "https://github.com/ArviZuko/Counterfeit-Hologram-Detector/releases/download/windows-2026-11-09/HologramAuthenticity_Setup.exe",
+          "size": 141719810,
+          "sha256": "20bbb8191c1082254ed173a33a861f4a958786c81dd4b389289657d3a3bed9e1",
+          "name": "HologramAuthenticity_Setup.exe"
+        }
+      ]
+    }
+  ]
+}
