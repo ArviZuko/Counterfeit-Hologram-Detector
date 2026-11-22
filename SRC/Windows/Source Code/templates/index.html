@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Hologram Authenticity Verification System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --bg-card-subtle: #F1F5F9;
+      --bg-input: #FFFFFF;
+      --border-color: #E2E8F0;
+      --border-dark: #CBD5E1;
+      --border-focus: #2563EB;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --accent-primary: #2563EB;
+      --accent-primary-hover: #1D4ED8;
+      --accent-emerald: #059669;
+      --accent-emerald-bg: #ECFDF5;
+      --accent-rose: #DC2626;
+      --accent-rose-bg: #FEF2F2;
+      --accent-slate: #475569;
+      --accent-slate-bg: #F8FAFC;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* Executive Clean Header */
+    header {
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #2563EB, #0284C7);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-weight: 800;
+      font-size: 20px;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+    }
+
+    .brand-titles h1 {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--text-main);
+      text-transform: uppercase;
+    }
+
+    .brand-titles p {
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.2px;
+    }
+
+    .header-badges {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 8px rgba(5, 150, 105, 0.5);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.9); }
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 340px 1fr 380px;
+      gap: 22px;
+      max-width: 1720px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    @media (max-width: 1280px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Professional Panels */
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Controls Styling */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    select, input[type="text"] {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      padding: 9px 12px;
+      font-size: 13px;
+      font-family: var(--font-main);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    }
+
+    /* Auto Calibration Box */
+    .auto-cal-box {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .auto-cal-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-primary);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .auto-cal-desc {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .auto-cal-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      font-family: var(--font-main);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563EB, #1D4ED8);
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #1D4ED8, #1E40AF);
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-analyze {
+      background: linear-gradient(135deg, #0284C7, #2563EB);
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 14px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-analyze:hover {
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #FFFFFF;
+      color: var(--text-main);
+      border: 1px solid var(--border-dark);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card-subtle);
+      border-color: var(--text-muted);
+    }
+
+    /* Video Workspace */
+    .viewport-box {
+      background: #020617;
+      border: 1px solid var(--border-dark);
+      border-radius: var(--radius-md);
+      position: relative;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #streamImg, #browserVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Alignment Reticle */
+    .reticle-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .target-box {
+      width: 46%;
+      height: 50%;
+      border: 2px dashed rgba(56, 189, 248, 0.8);
+      border-radius: 8px;
+      position: relative;
+    }
+
+    .target-box::before, .target-box::after {
+      content: '';
+      position: absolute;
+      background: rgba(56, 189, 248, 0.8);
+    }
+
+    .target-box::before {
+      top: 50%;
+      left: -12px;
+      right: -12px;
+      height: 1px;
+    }
+
+    .target-box::after {
+      left: 50%;
+      top: -12px;
+      bottom: -12px;
+      width: 1px;
+    }
+
+    .reticle-label {
+      position: absolute;
+      bottom: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      font-family: var(--font-mono);
+      background: rgba(15, 23, 42, 0.85);
+      color: #38BDF8;
+      padding: 2px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .viewport-tools {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-card-subtle);
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Visual Evidence Cards (2 Cards: Live Frame & Master Template) */
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .evidence-card {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .evidence-card span {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .evidence-img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: contain;
+      background: #020617;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Prominent Verdict Banner */
+    .verdict-banner {
+      border-radius: var(--radius-md);
+      padding: 20px;
+      text-align: center;
+      border: 2px solid var(--border-dark);
+      background: var(--bg-card-subtle);
+      transition: all 0.3s ease;
+    }
+
+    .verdict-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .verdict-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .verdict-authentic {
+      background: var(--accent-emerald-bg);
+      border-color: var(--accent-emerald);
+      color: var(--accent-emerald);
+    }
+
+    .verdict-counterfeit {
+      background: var(--accent-rose-bg);
+      border-color: var(--accent-rose);
+      color: var(--accent-rose);
+    }
+
+    .verdict-undetected {
+      background: var(--accent-slate-bg);
+      border-color: var(--border-dark);
+      color: var(--text-muted);
+    }
+
+    /* Verification Status Summary Table */
+    .summary-card {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .summary-label {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .summary-val {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Audit Table */
+    .audit-section {
+      max-width: 1720px;
+      margin: 0 auto 30px auto;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+    .audit-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    th {
+      text-align: left;
+      padding: 10px 14px;
+      background: var(--bg-card-subtle);
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 11px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-color);
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    tr:hover td {
+      background: var(--bg-card-subtle);
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-pill.original { background: var(--accent-emerald-bg); color: var(--accent-emerald); border: 1px solid #A7F3D0; }
+    .status-pill.counterfeit { background: var(--accent-rose-bg); color: var(--accent-rose); border: 1px solid #FECACA; }
+    .status-pill.undetected { background: var(--bg-card-subtle); color: var(--text-muted); border: 1px solid var(--border-dark); }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0F172A;
+      color: #FFFFFF;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      font-size: 13px;
+      font-weight: 500;
+      display: none;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Clean Executive Header -->
+  <header>
+    <div class="brand-group">
+      <div class="brand-icon">H</div>
+      <div class="brand-titles">
+        <h1>AI Hologram Authenticity Verification</h1>
+        <p>Visible Hyperspectral Narrow-Band Reconstruction (VIS-HSI) • Precision Optical Inspection</p>
+      </div>
+    </div>
+    <div class="header-badges">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        <span id="badgeHost">{{ platform_name }}</span>
+      </div>
+      <div class="badge">
+        <span>WiFi IP:</span>
+        <span id="badgeIp" style="color: var(--accent-primary);">{{ local_ips[0] if local_ips else '127.0.0.1' }}</span>
+      </div>
+      <div class="badge">
+        <span id="badgeFps" style="color: var(--text-muted);">FPS: --</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Three-Column Workspace -->
+  <main>
+
+    <!-- COLUMN 1: CAMERA & CALIBRATION -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Optical Input Source</span>
+        <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="refreshCameraDevices()">Refresh</button>
+      </div>
+
+      <!-- Camera Source Selection -->
+      <div class="form-group">
+        <label for="cameraSelect">Camera Device / Feed</label>
+        <select id="cameraSelect" onchange="onCameraSourceChanged()">
+          <option value="hardware:0">Laptop / Primary Webcam (Camera 0)</option>
+          <option value="hardware:1">USB External Camera (Camera 1)</option>
+          <option value="browser:0">Direct In-Browser Laptop Camera (WebRTC)</option>
+          <option value="picamera:0">Raspberry Pi CSI Camera (Picamera2)</option>
+          <option value="network:0">WiFi / IP Stream Camera (RTSP / HTTP)</option>
+        </select>
+      </div>
+
+      <!-- Network Stream URL Box (Shown when WiFi Camera is selected) -->
+      <div class="form-group" id="urlInputGroup" style="display: none;">
+        <label for="streamUrl">WiFi Camera Stream URL</label>
+        <input type="text" id="streamUrl" placeholder="rtsp://192.168.1.50:554/stream or http://...:8080/video">
+        <button class="btn btn-secondary" style="margin-top: 4px;" onclick="connectNetworkStream()">Connect WiFi Stream</button>
+      </div>
+
+      <!-- Camera Action (Stop button removed as requested) -->
+      <button class="btn btn-primary" id="btnStart" onclick="startCamera()">
+        ▶ Start Camera Stream
+      </button>
+
+      <button class="btn btn-secondary" onclick="captureSnapshot()">
+        📸 Capture Instant Snapshot
+      </button>
+
+      <!-- Automatic Spectral Calibration Section (Replaces manual sliders for automatic accuracy) -->
+      <div class="panel-header" style="margin-top: 6px;">
+        <span class="panel-title">Hyperspectral Calibration</span>
+      </div>
+
+      <div class="auto-cal-box">
+        <div class="auto-cal-title">⚡ Automatic Calibration</div>
+        <div class="auto-cal-desc">Wavelength: Auto (500 nm VIS-HSI)</div>
+        <div class="auto-cal-desc">Optical Gain: Dynamic Exposure Calibration</div>
+        <div class="auto-cal-sub">
+          Dynamic spectral reconstruction automatically locks to the peak counterfeit sensitivity band without manual adjustments.
+        </div>
+      </div>
+
+      <!-- Reference Master Template Selection -->
+      <div class="form-group">
+        <label for="templateSelect">Authentic Master Template</label>
+        <select id="templateSelect">
+          <option value="default">Master Hologram 'UR' (Template.png)</option>
+          <option value="banknote1">Currency Master Feature 1</option>
+          <option value="banknote2">Currency Master Feature 2</option>
+        </select>
+      </div>
+
+      <!-- Main Action Button -->
+      <button class="btn btn-analyze" id="btnAnalyze" onclick="executeAnalysis()">
+        ⚡ VERIFY HOLOGRAM AUTHENTICITY
+      </button>
+    </div>
+
+    <!-- COLUMN 2: LIVE VIEWPORT & REGISTERED FRAME -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Live Video Viewport</span>
+        <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="toggleReticle()">Toggle Target</button>
+      </div>
+
+      <!-- Viewport Monitor -->
+      <div class="viewport-box">
+        <img id="streamImg" src="/video_feed" alt="Live Camera Feed">
+        <video id="browserVideo" autoplay playsinline muted style="display: none;"></video>
+        <canvas id="browserCanvas" style="display: none;"></canvas>
+
+        <!-- Hologram Alignment Reticle -->
+        <div class="reticle-overlay" id="reticle">
+          <div class="target-box">
+            <span class="reticle-label">ALIGN HOLOGRAM TARGET</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="viewport-tools">
+        <span id="camStatusText" style="color: var(--accent-emerald); font-weight: 600;">System Camera Active</span>
+        <span id="resolutionText" style="font-family: var(--font-mono); color: var(--text-muted);">1280 x 720</span>
+      </div>
+
+      <!-- Acquisition Visual Evidence: Live Acquisition Frame & Verified Reference Template -->
+      <div class="panel-header" style="margin-top: 10px;">
+        <span class="panel-title">Visual Verification Evidence</span>
+      </div>
+
+      <div class="evidence-grid">
+        <div class="evidence-card">
+          <span>1. Live Acquisition Frame</span>
+          <img id="thumbRaw" class="evidence-img" src="/static/placeholder.png" alt="Live Frame">
+        </div>
+        <div class="evidence-card">
+          <span>2. Verified Reference Template</span>
+          <img id="evidenceRef" class="evidence-img" src="/static/placeholder.png" alt="Reference Template">
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUMN 3: AUTHENTICITY VERDICT & REPORT EXPORT -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Authenticity Verdict</span>
+      </div>
+
+      <!-- Prominent Decision Banner -->
+      <div class="verdict-banner" id="verdictBanner">
+        <div class="verdict-title" id="verdictTitle">Awaiting Inspection</div>
+        <div class="verdict-subtitle" id="verdictSubtitle">Place hologram under crosshairs and click Verify</div>
+      </div>
+
+      <!-- Inspection Summary Parameters -->
+      <div class="summary-card">
+        <div class="summary-row">
+          <span class="summary-label">Authentication Status:</span>
+          <span class="summary-val" id="sumStatus">--</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Spectral Calibration:</span>
+          <span class="summary-val">Auto (500 nm VIS-HSI)</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Optical Gain:</span>
+          <span class="summary-val" id="sumGain">Auto Adaptive</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label">Master Reference:</span>
+          <span class="summary-val">Calibrated Pattern ('UR')</span>
+        </div>
+      </div>
+
+      <!-- Export PDF Verification Certificate Action -->
+      <button class="btn btn-secondary" id="btnDownloadReport" style="margin-top: auto; padding: 12px; font-weight: 700;" onclick="downloadCertificate()">
+        📑 Export Formal PDF Certificate
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Audit Inspection Log -->
+  <section class="audit-section">
+    <div class="audit-card">
+      <div class="panel-header">
+        <span class="panel-title">Inspection Audit History</span>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="exportHistoryCsv()">Export CSV</button>
+          <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="clearHistory()">Clear</button>
+        </div>
+      </div>
+      <div style="overflow-x: auto;">
+        <table id="historyTable">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Specimen ID</th>
+              <th>Verification Result</th>
+              <th>Calibration</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody">
+            <tr>
+              <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 18px;">
+                No inspection records logged yet.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Toast Notification -->
+  <div id="toast">Notification message</div>
+
+  <script>
+    let isBrowserCameraActive = false;
+    let browserStream = null;
+    let lastAnalysisData = null;
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.innerText = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 3000);
+    }
+
+    function toggleReticle() {
+      const reticle = document.getElementById('reticle');
+      reticle.style.display = (reticle.style.display === 'none') ? 'flex' : 'none';
+    }
+
+    // Camera Management
+    async function onCameraSourceChanged() {
+      const sel = document.getElementById('cameraSelect');
+      const val = sel.value || 'hardware:0';
+      const [type, id] = val.split(':');
+      const selectedOpt = sel.options[sel.selectedIndex];
+      const backend = selectedOpt ? (selectedOpt.getAttribute('data-backend') || '') : '';
+      const urlBox = document.getElementById('urlInputGroup');
+      const streamImg = document.getElementById('streamImg');
+      const browserVideo = document.getElementById('browserVideo');
+
+      urlBox.style.display = (type === 'network') ? 'flex' : 'none';
+
+      if (type === 'browser') {
+        stopBackendStream();
+        await startBrowserWebcam();
+      } else {
+        stopBrowserWebcam();
+        browserVideo.style.display = 'none';
+        streamImg.style.display = 'block';
+
+        if (type !== 'network') {
+          try {
+            const res = await fetch('/api/camera/select', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ type: type, id: id, backend: backend })
+            });
+            const data = await res.json();
+            if (data.success) {
+              showToast(data.message);
+              streamImg.src = '/video_feed?t=' + Date.now();
+            } else {
+              showToast('Error: ' + data.error);
+            }
+          } catch (e) {
+            showToast('Failed to switch camera: ' + e);
+          }
+        }
+      }
+    }
+
+    async function startBrowserWebcam() {
+      const video = document.getElementById('browserVideo');
+      const streamImg = document.getElementById('streamImg');
+      try {
+        browserStream = await navigator.mediaDevices.getUserMedia({
+          video: { width: { ideal: 1280 }, height: { ideal: 720 } }
+        });
+        video.srcObject = browserStream;
+        video.style.display = 'block';
+        streamImg.style.display = 'none';
+        isBrowserCameraActive = true;
+        document.getElementById('camStatusText').innerText = "Laptop Browser Webcam Active";
+        showToast("Connected to Laptop Browser Webcam");
+      } catch (err) {
+        showToast("Webcam access error: " + err.message);
+        document.getElementById('cameraSelect').value = 'hardware:0';
+        onCameraSourceChanged();
+      }
+    }
+
+    function stopBrowserWebcam() {
+      if (browserStream) {
+        browserStream.getTracks().forEach(track => track.stop());
+        browserStream = null;
+      }
+      isBrowserCameraActive = false;
+    }
+
+    async function connectNetworkStream() {
+      const url = document.getElementById('streamUrl').value.trim();
+      if (!url) {
+        showToast("Please enter an RTSP or HTTP stream URL.");
+        return;
+      }
+      try {
+        const res = await fetch('/api/camera/select', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'network', url: url })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message);
+          document.getElementById('streamImg').src = '/video_feed?t=' + Date.now();
+        } else {
+          showToast("Network camera error: " + data.error);
+        }
+      } catch (e) {
+        showToast("Failed to connect: " + e);
+      }
+    }
+
+    async function startCamera() {
+      try {
+        const sel = document.getElementById('cameraSelect');
+        const val = sel.value || 'hardware:0';
+        const [type, id] = val.split(':');
+        const selectedOpt = sel.options[sel.selectedIndex];
+        const backend = selectedOpt ? (selectedOpt.getAttribute('data-backend') || '') : '';
+
+        if (type === 'browser') {
+          await startBrowserWebcam();
+          return;
+        }
+
+        stopBrowserWebcam();
+        document.getElementById('browserVideo').style.display = 'none';
+        const streamImg = document.getElementById('streamImg');
+        streamImg.style.display = 'block';
+
+        const res = await fetch('/api/camera/control', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'start', type: type, id: id, backend: backend })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message || "Camera stream started.");
+          streamImg.src = '/video_feed?t=' + Date.now();
+        } else {
+          showToast("Error starting camera: " + (data.error || "Unknown error"));
+        }
+      } catch (e) {
+        showToast("Error: " + e);
+      }
+    }
+
+    function stopBackendStream() {
+      fetch('/api/camera/control', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'stop' })
+      });
+    }
+
+    function captureCurrentBrowserFrameB64() {
+      const video = document.getElementById('browserVideo');
+      const canvas = document.getElementById('browserCanvas');
+      canvas.width = video.videoWidth || 1280;
+      canvas.height = video.videoHeight || 720;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      return canvas.toDataURL('image/jpeg', 0.85);
+    }
+
+    async function captureSnapshot() {
+      showToast("Snapshot captured.");
+    }
+
+    // Hologram Authenticity Analysis with Automatic Calibration
+    async function executeAnalysis() {
+      const btn = document.getElementById('btnAnalyze');
+      btn.innerText = "VERIFYING HOLOGRAM...";
+      btn.disabled = true;
+
+      const payload = {
+        auto_calibrate: true,
+        template: document.getElementById('templateSelect').value
+      };
+
+      if (isBrowserCameraActive) {
+        payload.image = captureCurrentBrowserFrameB64();
+      }
+
+      try {
+        const res = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          lastAnalysisData = data;
+          renderAnalysisResults(data);
+          showToast("Analysis complete: " + data.verdict);
+        } else {
+          showToast("Analysis error: " + data.error);
+        }
+      } catch (e) {
+        showToast("Analysis request failed: " + e);
+      } finally {
+        btn.innerText = "⚡ VERIFY HOLOGRAM AUTHENTICITY";
+        btn.disabled = false;
+      }
+    }
+
+    function renderAnalysisResults(data) {
+      // 1. Prominent Verdict Banner
+      const banner = document.getElementById('verdictBanner');
+      const title = document.getElementById('verdictTitle');
+      const sub = document.getElementById('verdictSubtitle');
+
+      banner.className = 'verdict-banner';
+      title.innerText = data.verdict;
+      sub.innerText = data.verdict_reason;
+
+      if (data.verdict.toLowerCase().includes('original')) {
+        banner.classList.add('verdict-authentic');
+      } else if (data.verdict.toLowerCase().includes('counterfeit')) {
+        banner.classList.add('verdict-counterfeit');
+      } else {
+        banner.classList.add('verdict-undetected');
+      }
+
+      // 2. Summary parameters
+      document.getElementById('sumStatus').innerText = data.verdict;
+      if (data.metrics && data.metrics.gain) {
+        document.getElementById('sumGain').innerText = `Auto (${data.metrics.gain}x)`;
+      }
+
+      // 3. Visual Evidence: Live Frame & Reference Template
+      if (data.images.raw_annotated) {
+        document.getElementById('thumbRaw').src = data.images.raw_annotated;
+      }
+      if (data.images.reference_template) {
+        document.getElementById('evidenceRef').src = data.images.reference_template;
+      }
+
+      // 4. Update Audit History
+      updateHistoryTable();
+    }
+
+    async function updateHistoryTable() {
+      try {
+        const res = await fetch('/api/history');
+        const data = await res.json();
+        const tbody = document.getElementById('historyBody');
+
+        if (!data.history || data.history.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 18px;">No inspection records logged yet.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = data.history.map(row => {
+          let pillClass = 'undetected';
+          if (row.verdict.toLowerCase().includes('original')) pillClass = 'original';
+          else if (row.verdict.toLowerCase().includes('counterfeit')) pillClass = 'counterfeit';
+
+          return `
+            <tr>
+              <td>${row.timestamp}</td>
+              <td style="color: var(--accent-primary); font-weight: 600;">${row.id}</td>
+              <td><span class="status-pill ${pillClass}">${row.verdict}</span></td>
+              <td>${row.calibration || 'Auto 500 nm'}</td>
+            </tr>
+          `;
+        }).join('');
+      } catch (e) {
+        console.error("Failed fetching history:", e);
+      }
+    }
+
+    function downloadCertificate() {
+      if (!lastAnalysisData) {
+        showToast("Please run an inspection first before downloading report.");
+        return;
+      }
+      window.location.href = '/api/report/download';
+    }
+
+    async function clearHistory() {
+      await fetch('/api/history', { method: 'DELETE' });
+      updateHistoryTable();
+      showToast("History cleared.");
+    }
+
+    async function exportHistoryCsv() {
+      const res = await fetch('/api/history');
+      const data = await res.json();
+      if (!data.history || data.history.length === 0) {
+        showToast("No history to export.");
+        return;
+      }
+      const headers = ["Timestamp", "Specimen_ID", "Verdict", "Calibration"];
+      const rows = data.history.map(r => [r.timestamp, r.id, `"${r.verdict}"`, `"${r.calibration || 'Auto 500 nm'}"`]);
+      const csvContent = [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Hologram_Audit_Log_${Date.now()}.csv`;
+      a.click();
+    }
+
+    // Periodic telemetry ping
+    setInterval(async () => {
+      try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+        if (data.fps > 0) {
+          document.getElementById('badgeFps').innerText = `FPS: ${data.fps}`;
+        }
+        if (data.camera_status) {
+          document.getElementById('camStatusText').innerText = data.camera_status;
+          document.getElementById('camStatusText').style.color = data.camera_color || '#059669';
+        }
+      } catch (e) {}
+    }, 2000);
+
+    // Initial camera devices enumeration
+    async function refreshCameraDevices(silent = false) {
+      try {
+        const res = await fetch('/api/camera/devices');
+        const data = await res.json();
+        const sel = document.getElementById('cameraSelect');
+        const currentVal = sel.value;
+        sel.innerHTML = '';
+        data.devices.forEach(d => {
+          const opt = document.createElement('option');
+          opt.value = `${d.type}:${d.id}`;
+          if (d.backend) {
+            opt.setAttribute('data-backend', d.backend);
+          }
+          opt.innerText = `${d.name} (${d.resolution})`;
+          sel.appendChild(opt);
+        });
+
+        if (currentVal && Array.from(sel.options).some(o => o.value === currentVal)) {
+          sel.value = currentVal;
+        } else if (sel.options.length > 0) {
+          sel.selectedIndex = 0;
+        }
+
+        if (!silent) {
+          showToast("Camera devices refreshed.");
+        }
+      } catch (e) {
+        if (!silent) {
+          showToast("Camera refresh failed: " + e);
+        }
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      updateHistoryTable();
+      await refreshCameraDevices(true);
+    });
+  </script>
+</body>
+</html>
